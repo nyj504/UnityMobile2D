@@ -1,0 +1,10 @@
+key,name,productionTime,productionUnit,inputKey1,inputKey2,inputAmount1,inputAmount2,outputAmount
+1,철광석,3,sec,0,0,0,0,1
+2,구리광석,3,sec,0,0,0,0,1
+3,철판,5,sec,1,1,5,5,1
+4,구리판,5,sec,2,2,5,5,1
+5,나사,10,sec,3,3,5,5,1
+6,구리선,10,sec,4,4,5,5,1
+7,로봇팔,2,min,5,6,10,10,1
+8,로봇다리,2,min,5,6,10,10,1
+9,로봇본체,2,min,5,6,10,10,1
