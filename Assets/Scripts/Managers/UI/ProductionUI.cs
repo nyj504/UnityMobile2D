@@ -1,33 +1,21 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 public class ProductionUI : MonoBehaviour
 {
-    private TextMeshProUGUI _productionInfo;
-    private Image _image;
-    private Image _itemImage;
-    private ItemData _itemData;
+    private ItemData _itemData; 
+    private Button _button;
 
     private void Awake()
     {
-        _image = GetComponent<Image>();
-
-        _productionInfo = transform.Find("ProductionInfo").GetComponent<TextMeshProUGUI>();
-        _itemImage = transform.Find("ItemImage").GetComponent<Image>();
+        _button = GetComponent<Button>();
+        _button.onClick.AddListener(OnClick);
     }
 
-    public void SetUIComponents()
+    private void OnClick()
     {
-        string path = "Items/Copper_Plate";
-
-        _itemData = DataManager.Instance.GetItemData(3);
-
-        Sprite sprite = Resources.Load<Sprite>(path);
-
-        _itemImage.sprite = sprite;
-
-        //_nameText.text = _itemData.Name;
-        _productionInfo.text = $"{_itemData.ProductionTime} {_itemData.ProductionUnit} {_itemData.OutputAmount}";
+        UIManager.Instance.ShowSelectionUI(_itemData);
     }
 }
