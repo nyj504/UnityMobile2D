@@ -1,63 +1,50 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class BuildSystem : MonoBehaviour
 {
-    public Grid grid;
-    [SerializeField]
-    private GameObject _factorySelectPanel;
+    public Tilemap tilemap;
+    public Color lineColor = Color.white;
 
-    [SerializeField]
-    private GameObject[] _factoryPrefabs;
-    [SerializeField]
-    private GameObject _ghostFactoryInstance;
-    [SerializeField]
-    private GameObject _ghostFactoryPrefab;
-
-    private GameObject _currentGhost;
-    private GameObject _selectedFactory;
-
+    private bool _showGrid = false;
     private void Update()
     {
-        if (_currentGhost != null)
+        ShowGrid(true);
+    }
+
+    public void ShowGrid(bool show)
+    {
+        _showGrid = show;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!_showGrid || tilemap == null) return;
+
+        Gizmos.color = lineColor;
+
+
+        BoundsInt bounds = tilemap.cellBounds;
+        Vector3 size = tilemap.cellSize;
+
+        for (int x = bounds.xMin; x < bounds.xMax; x++)
         {
-            Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mouseWorld.z = 0;
-
-            Vector3Int cellPos = grid.WorldToCell(mouseWorld);
-            _currentGhost.transform.position = grid.CellToWorld(cellPos);
-
-            if (Input.GetMouseButtonDown(0))
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
             {
-                if (IsValidPlacement(cellPos))
-                {
-                    Instantiate(_selectedFactory, _currentGhost.transform.position, Quaternion.identity);
-                }
+                Vector3Int cellPos = new Vector3Int(x, y, 0);
+                Vector3 cellWorldPos = tilemap.CellToWorld(cellPos);
+
+                Vector3 bottomLeft = cellWorldPos;
+                Vector3 bottomRight = cellWorldPos + new Vector3(size.x, 0, 0);
+                Vector3 topLeft = cellWorldPos + new Vector3(0, size.y, 0);
+                Vector3 topRight = cellWorldPos + new Vector3(size.x, size.y, 0);
+
+                Gizmos.DrawLine(bottomLeft, bottomRight);
+                Gizmos.DrawLine(bottomRight, topRight);
+                Gizmos.DrawLine(topRight, topLeft);
+                Gizmos.DrawLine(topLeft, bottomLeft);
             }
         }
-    }
-    public void OnBuildButtonClick()
-    {
-        _factorySelectPanel.SetActive(true);
-    }
-
-    public void SelectFactory(int factoryIndex)
-    {
-        _selectedFactory = _factoryPrefabs[factoryIndex];
-        _ghostFactoryPrefab = _selectedFactory; 
-
-        if (_currentGhost != null)
-            Destroy(_currentGhost);
-
-        _currentGhost = Instantiate(_ghostFactoryPrefab);
-        _currentGhost.GetComponent<Collider2D>().enabled = false;
-        _currentGhost.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f); 
-
-        _factorySelectPanel.SetActive(false);
-    }
-
-    bool IsValidPlacement(Vector3Int cell)
-    {
-        return true;
     }
 
 }
