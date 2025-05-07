@@ -4,17 +4,36 @@ using UnityEngine.Tilemaps;
 public class BuildSystem : MonoBehaviour
 {
     public Tilemap tilemap;
+    public GameObject[] _buildingPrefabs;
     public Color lineColor = Color.white;
+    private bool _isClickBuilding = false;
+    private int _buildingIndex = 0;
 
     private bool _showGrid = false;
+
+    private void Awake()
+    {
+        _buildingPrefabs = Resources.LoadAll<GameObject>("Prefabs/Buildings");
+    }
     private void Update()
     {
         ShowGrid(true);
+        if (_isClickBuilding)
+        {
+            Vector2 MousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            _buildingPrefabs[_buildingIndex].transform.position = MousePos;
+        }
     }
 
     public void ShowGrid(bool show)
     {
         _showGrid = show;
+    }
+
+    public void OnClickBuilding(int index)
+    {
+        _isClickBuilding = true;
+        _buildingIndex = index;
     }
 
     private void OnDrawGizmos()
