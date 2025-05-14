@@ -751,13 +751,14 @@ GameObject:
   m_Component:
   - component: {fileID: 414955138}
   - component: {fileID: 414955137}
+  - component: {fileID: 414955139}
   m_Layer: 0
   m_Name: OreMachineRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &414955137
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -828,6 +829,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &414955139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414955136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f7a21c41eac1d84883a56d7529d1556, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilemap: {fileID: 0}
+  _buildingPrefabs: []
 --- !u!1 &455879029
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,7 +925,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 455879032}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 896883373}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ShowBuildUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &455879032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1937,6 +1964,7 @@ GameObject:
   m_Component:
   - component: {fileID: 737956162}
   - component: {fileID: 737956161}
+  - component: {fileID: 737956163}
   m_Layer: 0
   m_Name: BuildingGrid
   m_TagString: Untagged
@@ -1956,9 +1984,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f7a21c41eac1d84883a56d7529d1556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilemap: {fileID: 1327831821}
+  tilemap: {fileID: 1414066578}
   _buildingPrefabs: []
-  lineColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!4 &737956162
 Transform:
   m_ObjectHideFlags: 0
@@ -1968,12 +1995,28 @@ Transform:
   m_GameObject: {fileID: 737956160}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1434.19, y: -120.83002, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1255835274}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &737956163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737956160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30fc716ba5e0e1c4ebaf09f3fa91abb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tilemap: {fileID: 1414066578}
+  lineColor: {r: 0.9245283, g: 0.17353453, b: 0.11774653, a: 1}
+  selectedTile: {fileID: 0}
+  targetColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &863403910
 GameObject:
   m_ObjectHideFlags: 0
@@ -2916,7 +2959,6 @@ RectTransform:
   m_Children:
   - {fileID: 478513165}
   - {fileID: 1132784399}
-  - {fileID: 737956162}
   m_Father: {fileID: 896883372}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -3443,7 +3485,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31cb6afbe3a68864085c9a90a4210426, type: 2}
+  - {fileID: 2100000, guid: 3d48a7a44bd8f854fac4dfe261236e17, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6914,6 +6956,8 @@ Tilemap:
   m_TileColorArray:
   - m_RefCount: 332
     m_Data: {r: 1, g: 1, b: 1, a: 1}
+  - m_RefCount: 0
+    m_Data: {r: 6.3341e-41, g: 6.3341e-41, b: 6.3341e-41, a: 6.3341e-41}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -7986,7 +8030,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &2015278781
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8384,3 +8428,4 @@ SceneRoots:
   - {fileID: 1107779621}
   - {fileID: 1211497134}
   - {fileID: 896883372}
+  - {fileID: 737956162}

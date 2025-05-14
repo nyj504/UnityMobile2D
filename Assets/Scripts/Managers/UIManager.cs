@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     private GameObject _selectionUIPanel;
+    private GameObject _buildUIPanel;
     private ProductionUI _productionUI;
     private Image _image;
     private Image _itemImage;
@@ -20,6 +21,7 @@ public class UIManager : MonoBehaviour
     {
         _instance = this;
         _selectionUIPanel = transform.Find("SelectionUIPanel").gameObject;
+        _buildUIPanel = transform.Find("BuildMenu").gameObject;
 
         _image = _selectionUIPanel.GetComponent<Image>();
         _itemImage = _selectionUIPanel.transform.Find("ItemImage").GetComponent<Image>();
@@ -28,6 +30,7 @@ public class UIManager : MonoBehaviour
         _productionUI = _selectionUIPanel.GetComponentInChildren<ProductionUI>(true);
 
         _selectionUIPanel.SetActive(false);
+        _buildUIPanel.SetActive(false);
     }
 
     public void ShowSelectionUI(ItemData data)
@@ -38,5 +41,10 @@ public class UIManager : MonoBehaviour
         Sprite sprite = Resources.Load<Sprite>("Items/" + "Copper_Plate");
         _itemImage.sprite = sprite;
         _productionInfo.text = $"{data.ProductionTime} {data.ProductionUnit} {data.OutputAmount}";
+    }
+
+    public void ShowBuildUI()
+    {
+        _buildUIPanel.SetActive(true);
     }
 }

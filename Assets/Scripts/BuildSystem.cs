@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -5,9 +7,13 @@ public class BuildSystem : MonoBehaviour
 {
     public Tilemap tilemap;
     public GameObject[] _buildingPrefabs;
-    public Color lineColor = Color.white;
+    private GameObject _overviewBuilding;
+    private List<GameObject> _buildings = new List<GameObject>();
     private bool _isClickBuilding = false;
+    private bool _isHoldBuilding = false;
     private int _buildingIndex = 0;
+    private GridSystem _gridSystem;
+
 
     private bool _showGrid = false;
 
@@ -15,55 +21,43 @@ public class BuildSystem : MonoBehaviour
     {
         _buildingPrefabs = Resources.LoadAll<GameObject>("Prefabs/Buildings");
     }
+
+    private void Start()
+    {
+        _gridSystem = GetComponent<GridSystem>();
+    }
     private void Update()
     {
-        ShowGrid(true);
         if (_isClickBuilding)
         {
             Vector2 MousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            _buildingPrefabs[_buildingIndex].transform.position = MousePos;
-        }
-    }
 
-    public void ShowGrid(bool show)
-    {
-        _showGrid = show;
+            Vector3Int cellPos = tilemap.WorldToCell(MousePos);
+            Vector3 cellWorldCenter = tilemap.GetCellCenterWorld(cellPos);
+
+            _overviewBuilding.transform.position = MousePos;
+           
+            if (Input.GetMouseButtonDown(0)) 
+            {
+                _isClickBuilding = false;
+                _buildingIndex = -1;
+
+
+                _overviewBuilding.transform.position = cellWorldCenter;
+                _buildings.Add(_overviewBuilding);
+                Vector3Int cellWorldCenterInt = new Vector3Int((int)cellWorldCenter.x,(int)cellWorldCenter.y, 0);
+
+                _gridSystem.SetTileInfo(cellWorldCenterInt, TileStateType.Occupied);
+            }
+        }
     }
 
     public void OnClickBuilding(int index)
     {
         _isClickBuilding = true;
         _buildingIndex = index;
+       
+        GameObject newobj = Instantiate(_buildingPrefabs[_buildingIndex], new Vector3(0, 0, 0), Quaternion.identity);
+        _overviewBuilding = newobj;
     }
-
-    private void OnDrawGizmos()
-    {
-        if (!_showGrid || tilemap == null) return;
-
-        Gizmos.color = lineColor;
-
-
-        BoundsInt bounds = tilemap.cellBounds;
-        Vector3 size = tilemap.cellSize;
-
-        for (int x = bounds.xMin; x < bounds.xMax; x++)
-        {
-            for (int y = bounds.yMin; y < bounds.yMax; y++)
-            {
-                Vector3Int cellPos = new Vector3Int(x, y, 0);
-                Vector3 cellWorldPos = tilemap.CellToWorld(cellPos);
-
-                Vector3 bottomLeft = cellWorldPos;
-                Vector3 bottomRight = cellWorldPos + new Vector3(size.x, 0, 0);
-                Vector3 topLeft = cellWorldPos + new Vector3(0, size.y, 0);
-                Vector3 topRight = cellWorldPos + new Vector3(size.x, size.y, 0);
-
-                Gizmos.DrawLine(bottomLeft, bottomRight);
-                Gizmos.DrawLine(bottomRight, topRight);
-                Gizmos.DrawLine(topRight, topLeft);
-                Gizmos.DrawLine(topLeft, bottomLeft);
-            }
-        }
-    }
-
 }
