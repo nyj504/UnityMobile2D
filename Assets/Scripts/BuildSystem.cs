@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -12,8 +13,8 @@ public class BuildSystem : MonoBehaviour
     private bool _isClickBuilding = false;
     private bool _isHoldBuilding = false;
     private int _buildingIndex = 0;
+    private SpriteRenderer _spriteRenderer;
     private GridSystem _gridSystem;
-
 
     private bool _showGrid = false;
 
@@ -30,24 +31,32 @@ public class BuildSystem : MonoBehaviour
     {
         if (_isClickBuilding)
         {
-            Vector2 MousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            Vector3Int cellPos = tilemap.WorldToCell(MousePos);
+            Vector3Int cellPos = tilemap.WorldToCell(mousePos);
             Vector3 cellWorldCenter = tilemap.GetCellCenterWorld(cellPos);
 
-            _overviewBuilding.transform.position = MousePos;
+            if (_gridSystem.GetTileState(cellPos) == TileStateType.Empty)
+            {
+                _spriteRenderer.color = Color.green;
+            }
+            else
+            {
+                _spriteRenderer.color = Color.red;
+            }
+
+            _overviewBuilding.transform.position = mousePos;
            
             if (Input.GetMouseButtonDown(0)) 
             {
                 _isClickBuilding = false;
                 _buildingIndex = -1;
 
-
                 _overviewBuilding.transform.position = cellWorldCenter;
-                _buildings.Add(_overviewBuilding);
-                Vector3Int cellWorldCenterInt = new Vector3Int((int)cellWorldCenter.x,(int)cellWorldCenter.y, 0);
 
-                _gridSystem.SetTileInfo(cellWorldCenterInt, TileStateType.Occupied);
+                _buildings.Add(_overviewBuilding);
+
+                _gridSystem.SetTileInfo(cellPos, TileStateType.Occupied);
             }
         }
     }
@@ -59,5 +68,6 @@ public class BuildSystem : MonoBehaviour
        
         GameObject newobj = Instantiate(_buildingPrefabs[_buildingIndex], new Vector3(0, 0, 0), Quaternion.identity);
         _overviewBuilding = newobj;
+        _spriteRenderer = _overviewBuilding.GetComponent<SpriteRenderer>();
     }
 }

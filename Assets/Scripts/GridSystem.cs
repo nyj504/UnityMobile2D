@@ -20,19 +20,23 @@ public class GridSystem : MonoBehaviour
     public TileBase selectedTile;
     public Color targetColor = Color.black;  
 
-    private Dictionary<Vector3Int, TileStateType> _tileState = new Dictionary<Vector3Int, TileStateType>();
+    protected Dictionary<Vector3Int, TileStateType> _tileState = new Dictionary<Vector3Int, TileStateType>();
     private void Start()
     {
         DrawGrid();
+        InitTileState();
     }
     private void Update()
     {
-         ChangeTileColor();
+         //ChangeTileColor();
     }
-
-    public void SetTileInfo(Vector3Int tilemapPos, TileStateType type)
+    public TileStateType GetTileState(Vector3Int pos)
     {
-        _tileState[tilemapPos] = type;
+        return _tileState[pos];
+    }
+    public void SetTileInfo(Vector3Int pos, TileStateType state)
+    {
+        _tileState[pos] = state;
     }
 
     public void DrawGrid()
@@ -44,7 +48,6 @@ public class GridSystem : MonoBehaviour
         Vector3 size = _tilemap.cellSize;
         Vector3 mouseToCellPosition = _tilemap.CellToWorld(new Vector3Int(mousePos.x, mousePos.y, 0));
        
-
         for (int x = bounds.xMin; x <= bounds.xMax; x++)
         {
             Vector3 start = _tilemap.CellToWorld(new Vector3Int(x, bounds.yMin, 0));
@@ -58,8 +61,6 @@ public class GridSystem : MonoBehaviour
             Vector3 end = _tilemap.CellToWorld(new Vector3Int(bounds.xMax, y, 0));
             Debug.DrawLine(start, end, lineColor, 100f);
         }
-
-        
     }
 
     public void ChangeTileColor()
@@ -88,5 +89,23 @@ public class GridSystem : MonoBehaviour
         _tilemap.SetTile(cellPos, newTile);
 
         _prevCellPos = cellPos;
+    }
+
+    private void InitTileState()
+    {
+        BoundsInt bounds = _tilemap.cellBounds;
+
+        for (int x = bounds.xMin; x < bounds.xMax; x++)
+        {
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
+            {
+                Vector3Int cellPos = new Vector3Int(x, y, 0);
+
+                if (_tilemap.HasTile(cellPos))
+                {
+                    _tileState[cellPos] = TileStateType.Empty;
+                }
+            }
+        }
     }
 }
